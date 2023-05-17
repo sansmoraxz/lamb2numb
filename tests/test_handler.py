@@ -91,8 +91,8 @@ class TestAWSLambdaHandler(unittest.TestCase):
 
     def test_lambda_handler(self):
         """Test lambda_handler"""
-        lambda_handler(event, None)
-        assert True
+        arr = lambda_handler(event, None)
+        assert arr.shape == (int(ARR_SIZE),)
 
     def tearDown(self):
         """Tear down method

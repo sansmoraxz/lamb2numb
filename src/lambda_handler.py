@@ -27,3 +27,4 @@ def lambda_handler(event, context):
     with io.BytesIO(obj['Body'].read()) as file_bytes:
         arr = np.load(file_bytes)
         print("Array from S3: ", arr)
+        return arr
