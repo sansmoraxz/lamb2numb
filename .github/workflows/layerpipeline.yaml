@@ -24,15 +24,11 @@ jobs:
       - uses: actions/checkout@v3
       - name: Install poetry
         run: pipx install poetry
-      - name: Configure poetry
-        run: |
-            poetry config --local virtualenvs.in-project true
-            poetry config --local virtualenvs.path .venv
-            poetry config --local virtualenvs.options.always-copy true
+
       - uses: actions/setup-python@v4
         with:
           python-version: '3.10'
-          cache: 'poetry'
+          cache: 'pip'
 
       - name: AWS login
         uses: aws-actions/configure-aws-credentials@v1
@@ -46,7 +42,7 @@ jobs:
 
       - name: Zip dependencies
         run: |
-          cp -r .venv/lib/python3.10/site-packages python
+          poetry run pip install -r <(poetry export -f requirements.txt --without-hashes) -t python
           zip -r lambda.zip python
       - name: Upload zip to S3
         run: aws s3 cp lambda.zip s3://${{ secrets.AWS_BUCKET }}/${{ github.event.repository.name }}-${{ github.sha }}.zip
