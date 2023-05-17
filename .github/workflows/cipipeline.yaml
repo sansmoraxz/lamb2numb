@@ -1,0 +1,55 @@
+name: ci pipeline 
+
+permissions:
+  id-token: write
+  contents: read
+  actions: read
+
+on:
+  push:
+    tags:
+      - '[0-9]+.[0-9]+.[0-9]+'
+    branches:
+      - main
+    paths:
+      - 'src/**'
+      - 'tests/**'
+      - 'pyproject.toml'
+      - 'poetry.lock'
+      - '.github/workflows/**'
+
+jobs:
+  coverage:
+    name: Code Coverage
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install poetry
+        run: pipx install poetry
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+          cache: 'poetry'
+
+      - name: Install dependencies
+        run: poetry install
+
+      - name: Run tests
+        run: poetry run pytest
+    
+      - name: AWS login
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          role-session-name: gha-lambda-deploy-${{ github.event.repository.name }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Zip everything
+        run: zip -r lambda.zip *
+      - name: Deploy zip to lambda
+        env:
+          FUNCTION_NAME: ${{ secrets.FUNCTION_NAME }}
+        run:  aws lambda update-function-code
+                --function-name $FUNCTION_NAME
+                --zip-file fileb://lambda.zip
