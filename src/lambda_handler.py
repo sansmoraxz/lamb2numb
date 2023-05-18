@@ -1,6 +1,7 @@
 """Lambda handler function entry point"""
 
 import io
+import os
 
 import boto3
 import numpy as np
@@ -23,8 +24,15 @@ def lambda_handler(event, context):
     bucket_name = event['Records'][0]['s3']['bucket']['name']
     key = event['Records'][0]['s3']['object']['key']
     obj = s3_client.get_object(Bucket=bucket_name, Key=key)
+    queue_url = os.environ['QUEUE_URL']
     # read s3-object to np array
     with io.BytesIO(obj['Body'].read()) as file_bytes:
         arr = np.load(file_bytes)
         print("Array from S3: ", arr)
+        # publish to sqs
+        sqs_client = boto3.client('sqs')
+        sqs_client.send_message(
+            QueueUrl=queue_url,
+            MessageBody=str(arr.tolist())
+        )
         return arr
