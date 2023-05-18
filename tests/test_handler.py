@@ -98,6 +98,7 @@ class TestAWSLambdaHandler(unittest.TestCase):
             3. Crete mock SQS queue
             4. Export queue URL to environment variable
         """
+        os.environ['AWS_DEFAULT_REGION'] = 'us-east-1'
         create_s3_bucket(BUCKET_NAME)
         client = boto3.client("s3")
         upload_dummy_array_to_s3(client, BUCKET_NAME, FILE_NAME)
@@ -151,3 +152,4 @@ class TestAWSLambdaHandler(unittest.TestCase):
         sqs_client.delete_queue(QueueUrl=os.environ['QUEUE_URL'])
         # Delete environment variable
         del os.environ['QUEUE_URL']
+        del os.environ['AWS_DEFAULT_REGION']
