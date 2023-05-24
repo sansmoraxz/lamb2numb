@@ -12,7 +12,7 @@ on:
     branches:
       - main
     paths:
-      - 'src/**'
+      - 'lamb2numb/**'
       - 'tests/**'
       - 'pyproject.toml'
       - 'poetry.lock'

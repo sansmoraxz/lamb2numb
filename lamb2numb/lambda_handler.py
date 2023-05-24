@@ -6,6 +6,8 @@ import os
 import boto3
 import numpy as np
 
+from lamb2numb import hello
+
 # # pylint: disable=unused-argument
 def lambda_handler(event, context):
     """
@@ -23,6 +25,8 @@ def lambda_handler(event, context):
     s3_client = boto3.client('s3')
     bucket_name = event['Records'][0]['s3']['bucket']['name']
     key = event['Records'][0]['s3']['object']['key']
+    hello_s = hello.hello_fn()
+    print(hello_s)
     obj = s3_client.get_object(Bucket=bucket_name, Key=key)
     queue_url = os.environ['QUEUE_URL']
     # read s3-object to np array

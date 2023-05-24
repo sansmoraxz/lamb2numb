@@ -10,8 +10,7 @@ import botocore
 
 import numpy as np
 
-from src.lambda_handler import lambda_handler
-
+from lamb2numb.lambda_handler import lambda_handler
 
 BUCKET_NAME = 'aws-test-bucket-us-esat-145-234'
 FILE_NAME = 'my-array.npy'
@@ -33,6 +32,7 @@ event = {
     ]
 }
 
+
 def create_s3_bucket(bucket_name) -> str:
     """Create S3 bucket
 
@@ -52,6 +52,7 @@ def create_s3_bucket(bucket_name) -> str:
     print(f"Bucket {bucket_name} created")
     return bucket_name
 
+
 def create_sqs_queue(queue_name) -> str:
     """Create SQS queue
 
@@ -67,6 +68,7 @@ def create_sqs_queue(queue_name) -> str:
         # }
     )
     return response['QueueUrl']
+
 
 def upload_dummy_array_to_s3(client, bucket_name, file_name):
     """Upload dummy numpy array to S3 bucket
@@ -91,6 +93,7 @@ def upload_dummy_array_to_s3(client, bucket_name, file_name):
 @mock_sqs
 class TestAWSLambdaHandler(unittest.TestCase):
     """Test AWS Lambda handler function"""
+
     def setUp(self):
         """Setup method
             1. Create mock S3 bucket
@@ -129,7 +132,7 @@ class TestAWSLambdaHandler(unittest.TestCase):
         assert len(response['Messages']) == 1
         assert response['Messages'][0]['Body'] == str(arr.tolist())
         print("Response body from SQS:", response['Messages'][0]['Body'])
-        print ("Test passed")
+        print("Test passed")
 
     def tearDown(self):
         """Tear down method
