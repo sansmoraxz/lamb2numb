@@ -25,4 +25,3 @@ build-backend = "poetry.core.masonry.api"
 # pytest
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-addopts = ["--cov=src", "--cov-report=term-missing"]
