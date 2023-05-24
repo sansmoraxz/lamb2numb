@@ -1,11 +1,12 @@
-"""Lambda handler function entry point"""
+"""Lambda handler function entry point."""
 
 import io
+import logging
 import os
-
 import typing
 
 import boto3
+import numpy as np
 
 from .loaders import auto_loader
 
@@ -22,19 +23,23 @@ else:
     SendMessageResultTypeDef = dict
 
 # # pylint: disable=unused-argument
-def lambda_handler(event, context):
-    """
-    Lambda handler function
+def lambda_handler(event: dict, context: object) -> np.ndarray:
+    """Lambda handler function.
+
+    Reads numpy array from S3, publishes it to SQS.
+
     Parameters
     ----------
     event: dict, required
         S3 put event
         Event doc: https://docs.aws.amazon.com/lambda/latest/dg/with-s3.html
+
     context: object, required
         Lambda Context runtime methods and attributes
         Context doc: https://docs.aws.amazon.com/lambda/latest/dg/python-context-object.html
+
     Returns
-    ------
+    -------
     numpy.ndarray
         Array refresentation of the S3 object
     """
@@ -47,12 +52,12 @@ def lambda_handler(event, context):
     # read s3-object to np array
     with io.BytesIO(obj['Body'].read()) as file_bytes:
         arr = auto_loader(file_bytes, key)
-        print("Array from S3: ", arr)
+        logging.info('Array from S3: %s', arr)
         # publish to sqs
         sqs_client : SQSClient = boto3.client('sqs')
         resp : SendMessageResultTypeDef = sqs_client.send_message(
             QueueUrl=queue_url,
-            MessageBody=str(arr.tolist())
+            MessageBody=str(arr.tolist()),
         )
-        print("Message sent to SQS: ", resp)
+        logging.info('Message sent to SQS: %s', resp)
         return arr

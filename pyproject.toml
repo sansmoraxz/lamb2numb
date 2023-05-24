@@ -18,11 +18,87 @@ boto3-stubs = {version = "^1.26.135", extras = ["s3", "sqs"]}
 moto = {extras = ["s3"], version = "^4.1.9"}
 pytest = "^7.3.1"
 pytest-cov = "^4.0.0"
+ruff = "*"
+ruff-lsp = "*"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
-# pytest
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+
+[tool.black]
+skip-string-normalization = 1
+
+[tool.ruff]
+# https://beta.ruff.rs/docs/rules/
+select = ["ALL"]
+
+
+# It appears that a single "Q" ignores all codes that start with Q
+# but you could also disable single errors instead of classes of errors
+ignore = ["INP001", # implicit-namespace-package
+          "ANN",    # type annotations
+          "T20",    # flake8-print (warns when there are print statements)
+          "ARG001", # unused-argument
+
+          # One of these is to be disabled..
+          # (I prefer disabling D212 (Multi-line docstring summary should start at the first line)
+          #  because I like text inside a docstring
+          #  to start the line below the three """)
+          #"D213", # See https://github.com/charliermarsh/ruff/issues/2281
+          "D212", # See https://github.com/charliermarsh/ruff/issues/2281
+
+          # One of these is to be disabled.
+          # No strong preference here.
+          # One expects a blank line before a class docstring
+          #"D203", # See https://github.com/charliermarsh/ruff/issues/2281
+          "D211", # See https://github.com/charliermarsh/ruff/issues/2281
+]
+
+# Exclude a variety of commonly ignored directories.
+exclude = [
+    ".bzr",
+    ".direnv",
+    ".eggs",
+    ".git",
+    ".hg",
+    ".mypy_cache",
+    ".nox",
+    ".pants.d",
+    ".ruff_cache",
+    ".svn",
+    ".tox",
+    ".venv",
+    "__pypackages__",
+    "_build",
+    "buck-out",
+    "build",
+    "dist",
+    "node_modules",
+    "venv",
+]
+per-file-ignores = {}
+
+# Same as black.
+line-length = 88
+
+# Allow unused variables when underscore-prefixed.
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+
+# Assume Python 3.10.
+target-version = "py310"
+
+# Enumerate all fixed violations.
+show-fixes = true
+# Show source code for each violation.
+show-source = true
+
+
+# This is how you tell Q000 errors to prefer single quotes
+[tool.ruff.flake8-quotes]
+inline-quotes = "single"
+
+[tool.ruff.pydocstyle]
+convention = "numpy"  # Or "numpy", or "pep257" or "google"

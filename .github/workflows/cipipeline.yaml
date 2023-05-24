@@ -35,6 +35,10 @@ jobs:
       - name: Install dependencies
         run: poetry install
 
+      - name: Verify code conventions
+        run:
+          poetry run ruff check .
+
       - name: Run tests
         run: poetry run pytest --cov=lamb2numb --cov-report=term-missing
     
