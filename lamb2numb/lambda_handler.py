@@ -17,8 +17,8 @@ if typing.TYPE_CHECKING:
     from mypy_boto3_sqs.type_defs import SendMessageResultTypeDef
 
 else:
-    SQSClient = boto3.client('sqs')
-    S3Client = boto3.client('s3')
+    SQSClient = object
+    S3Client = object
     GetObjectOutputTypeDef = dict
     SendMessageResultTypeDef = dict
 
