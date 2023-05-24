@@ -37,12 +37,9 @@ jobs:
           role-session-name: gha-lambda-layer-${{ github.event.repository.name }}
           aws-region: ${{ vars.AWS_REGION }}
 
-      - name: Install dependencies
-        run: poetry install --no-dev
-
-      - name: Zip dependencies
+      - name: Download Zip dependencies
         run: |
-          poetry run pip install -r <(poetry export -f requirements.txt --without-hashes) -t python
+          pip install -t python .
           zip -r lambda.zip python
       - name: Upload zip to S3
         run: aws s3 cp lambda.zip s3://${{ secrets.AWS_BUCKET }}/${{ github.event.repository.name }}-${{ github.sha }}.zip
