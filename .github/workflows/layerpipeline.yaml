@@ -42,7 +42,11 @@ jobs:
           zip -r lambda.zip python
 
       - name: Upload zip to S3
-        run: aws s3 cp lambda.zip s3://${{ secrets.AWS_BUCKET }}/${{ github.event.repository.name }}-${{ github.sha }}.zip
+        run: aws s3 cp
+                lambda.zip
+                s3://${{ secrets.AWS_BUCKET }}/${{ github.event.repository.name }}-${{ github.sha }}.zip
+                --no-progress
+
       - name: Deploy layer for AWS Lambda
         env:
           AWS_BUCKET: aedp-lambda-layer-eu-west-3
