@@ -18,12 +18,11 @@ on:
 
 jobs:
   deployment:
-    name: Deployment layer
+    name: Dependencies Publish to lambda layer
     runs-on: ubuntu-latest
     steps:
+
       - uses: actions/checkout@v3
-      - name: Install poetry
-        run: pipx install poetry
 
       - uses: actions/setup-python@v4
         with:
@@ -37,10 +36,11 @@ jobs:
           role-session-name: gha-lambda-layer-${{ github.event.repository.name }}
           aws-region: ${{ vars.AWS_REGION }}
 
-      - name: Download Zip dependencies
+      - name: Download & zip dependencies
         run: |
           pip install -t python .
           zip -r lambda.zip python
+
       - name: Upload zip to S3
         run: aws s3 cp lambda.zip s3://${{ secrets.AWS_BUCKET }}/${{ github.event.repository.name }}-${{ github.sha }}.zip
       - name: Deploy layer for AWS Lambda
