@@ -34,6 +34,8 @@ skip-string-normalization = 1
 [tool.ruff]
 # https://beta.ruff.rs/docs/rules/
 select = ["ALL"]
+# set root level
+src = ["."]
 
 
 # It appears that a single "Q" ignores all codes that start with Q

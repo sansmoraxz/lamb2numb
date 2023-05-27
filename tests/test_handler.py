@@ -7,8 +7,9 @@ import unittest
 import boto3
 import botocore
 import numpy as np
-from lamb2numb.lambda_handler import lambda_handler
 from moto import mock_s3, mock_sqs
+
+from lamb2numb.lambda_handler import lambda_handler
 
 BUCKET_NAME = 'aws-test-bucket-us-esat-145-234'
 FILE_NAME = 'my-array.npy'
