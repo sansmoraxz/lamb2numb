@@ -64,3 +64,10 @@ jobs:
         run: aws lambda update-function-configuration
                 --function-name "${FUNCTION_NAME}"
                 --layers "$(jq -r '.LayerVersionArn' layer.json)"
+
+      - name: Wait for lambda to be updated
+        env:
+          FUNCTION_NAME: ${{ secrets.FUNCTION_NAME }}
+        run: aws lambda wait function-updated
+              --function-name $FUNCTION_NAME
+              --output text

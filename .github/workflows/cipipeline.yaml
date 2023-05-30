@@ -54,9 +54,17 @@ jobs:
 
       - name: Zip everything
         run: zip -r lambda.zip *
+
       - name: Deploy zip to lambda
         env:
           FUNCTION_NAME: ${{ secrets.FUNCTION_NAME }}
         run:  aws lambda update-function-code
                 --function-name $FUNCTION_NAME
                 --zip-file fileb://lambda.zip
+
+      - name: Wait for lambda to be updated
+        env:
+          FUNCTION_NAME: ${{ secrets.FUNCTION_NAME }}
+        run: aws lambda wait function-updated
+              --function-name $FUNCTION_NAME
+              --output text
