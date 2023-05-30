@@ -19,8 +19,8 @@ on:
       - '.github/workflows/**'
 
 jobs:
-  coverage:
-    name: Code Coverage
+  code:
+    name: Code
     runs-on: ubuntu-latest
     concurrency:
       group: lambda-update
