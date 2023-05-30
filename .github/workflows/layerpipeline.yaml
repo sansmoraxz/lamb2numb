@@ -53,4 +53,11 @@ jobs:
                 --description "Layer for ${{ github.event.repository.name }}"
                 --content "S3Bucket=${{ secrets.AWS_BUCKET }},S3Key=${{ github.event.repository.name }}-${{ github.sha }}.zip"
                 --compatible-runtimes "python3.10"
-                --compatible-architectures "x86_64"
+                --compatible-architectures "x86_64" > layer.json
+
+      - name: Update lambda function to match published layer
+        env:
+          FUNCTION_NAME: ${{ secrets.FUNCTION_NAME }}
+        run: aws lambda update-function-configuration
+                --function-name "${FUNCTION_NAME}"
+                --layers "$(jq -r '.LayerVersionArn' layer.json)"
