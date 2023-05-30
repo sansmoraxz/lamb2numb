@@ -20,6 +20,9 @@ jobs:
   deployment:
     name: Dependencies Publish to lambda layer
     runs-on: ubuntu-latest
+    concurrency:
+      group: lambda-update
+      cancel-in-progress: false
     steps:
 
       - uses: actions/checkout@v3
