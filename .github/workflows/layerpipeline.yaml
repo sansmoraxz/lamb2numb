@@ -54,7 +54,7 @@ jobs:
         run: aws lambda publish-layer-version
                 --layer-name "${{ github.event.repository.name }}-layer"
                 --description "Layer for ${{ github.event.repository.name }}"
-                --content "S3Bucket=${{ secrets.AWS_BUCKET }},S3Key=${{ github.event.repository.name }}-${{ github.sha }}.zip"
+                --content "S3Bucket=${{ secrets.AWS_BUCKET }},S3Key=${{ github.event.repository.name }}-layer-${{ github.sha }}.zip"
                 --compatible-runtimes "python3.10"
                 --compatible-architectures "x86_64" > layer.json
 
