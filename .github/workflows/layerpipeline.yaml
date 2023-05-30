@@ -39,12 +39,12 @@ jobs:
       - name: Download & zip dependencies
         run: |
           pip install -t python .
-          zip -r lambda.zip python
+          zip -r layer.zip python
 
       - name: Upload zip to S3
         run: aws s3 cp
-                lambda.zip
-                s3://${{ secrets.AWS_BUCKET }}/${{ github.event.repository.name }}-${{ github.sha }}.zip
+                layer.zip
+                s3://${{ secrets.AWS_BUCKET }}/${{ github.event.repository.name }}-layer-${{ github.sha }}.zip
                 --no-progress
 
       - name: Deploy layer for AWS Lambda
