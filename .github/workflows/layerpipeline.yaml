@@ -33,7 +33,7 @@ jobs:
           cache: 'pip'
 
       - name: AWS login
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
           role-session-name: gha-lambda-layer-${{ github.event.repository.name }}
